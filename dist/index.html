@@ -6,6 +6,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title data-i18n="title">小红书笔记提取-推送配置</title>
   <style>
+    /* ==================== CSS 变量定义 ==================== */
+    :root {
+      /* 主色调 - 小红书红 */
+      --primary-color: #ff2442;
+      --primary-light: #ff6b8a;
+      --primary-dark: #e01f3a;
+      --primary-gradient: linear-gradient(135deg, #ff2442 0%, #ff6b8a 100%);
+
+      /* 辅助色 */
+      --success-color: #52c41a;
+      --success-light: #95de64;
+      --success-bg: #f6ffed;
+      --warning-color: #faad14;
+      --warning-bg: #fffbe6;
+      --info-color: #1890ff;
+      --info-bg: #e6f7ff;
+      --error-color: #ff4d4f;
+      --error-bg: #fff1f0;
+
+      /* 中性色 */
+      --text-primary: #1a1a1a;
+      --text-secondary: #666;
+      --text-tertiary: #999;
+      --text-disabled: #ccc;
+
+      /* 背景色 */
+      --bg-primary: #ffffff;
+      --bg-secondary: #fafafa;
+      --bg-tertiary: #f5f5f5;
+      --bg-gradient: linear-gradient(135deg, #fff5f8 0%, #ffeef2 50%, #fff0f5 100%);
+
+      /* 边框色 */
+      --border-color: #e8e8e8;
+      --border-color-light: #f0f0f0;
+      --border-color-dark: #d9d9d9;
+
+      /* 阴影 */
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+      --shadow-primary: 0 4px 16px rgba(255, 36, 66, 0.2);
+
+      /* 圆角 */
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+
+      /* 间距 */
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 12px;
+      --spacing-lg: 16px;
+      --spacing-xl: 24px;
+      --spacing-2xl: 32px;
+    }
+
+    /* ==================== 全局样式 ==================== */
     * {
       margin: 0;
       padding: 0;
@@ -13,11 +71,15 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg-primary);
       min-height: 100vh;
-      padding: 20px;
+      padding: var(--spacing-lg);
       position: relative;
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     body::before {
@@ -27,110 +89,149 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, #ffeef2 0%, #ffe4e8 50%, #fff0f5 100%);
+      background: var(--bg-gradient);
       z-index: -1;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 960px;
       margin: 0 auto;
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 32px;
-      box-shadow: 0 4px 20px rgba(255, 105, 180, 0.08);
-      border: 1px solid rgba(255, 105, 180, 0.05);
+      background: var(--bg-primary);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-2xl);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255, 36, 66, 0.08);
+      position: relative;
+      overflow: hidden;
     }
 
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--primary-gradient);
+    }
+
+    /* ==================== 头部样式 ==================== */
     .header {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: var(--spacing-2xl);
+      position: relative;
     }
 
     .title {
-      font-size: 28px;
-      font-weight: 600;
-      color: #ff2442;
-      margin-bottom: 8px;
+      font-size: 32px;
+      font-weight: 700;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: var(--spacing-sm);
       position: relative;
       display: inline-block;
-    }
-
-    .title::before {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 10%;
-      right: 10%;
-      height: 3px;
-      background: linear-gradient(90deg, #ff2442 0%, #ff6b6b 100%);
-      border-radius: 2px;
+      letter-spacing: -0.5px;
     }
 
     .subtitle {
-      font-size: 14px;
-      color: #999;
-      margin-top: 12px;
+      font-size: 15px;
+      color: var(--text-tertiary);
+      font-weight: 400;
+      margin-top: var(--spacing-md);
     }
 
     /* 用户信息样式 */
     #userInfo {
-      background: linear-gradient(135deg, #fff5f7 0%, #ffeef0 100%);
-      padding: 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 107, 107, 0.2);
-      margin-bottom: 24px;
+      background: linear-gradient(135deg, #fff5f8 0%, #ffeef2 100%);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 36, 66, 0.15);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    #userInfo:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
     }
 
     /* 表格列表样式 */
     .table-list {
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      margin-bottom: 24px;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
     }
 
     .table-item {
-      background: #ffffff;
-      border: 2px solid #f0f0f0;
-      border-radius: 12px;
-      padding: 20px;
-      transition: all 0.3s ease;
+      background: var(--bg-primary);
+      border: 2px solid var(--border-color-light);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .table-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--primary-gradient);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .table-item:hover {
-      border-color: #ff6b6b;
-      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.1);
+      border-color: var(--primary-light);
+      box-shadow: var(--shadow-md);
       transform: translateY(-2px);
     }
 
+    .table-item:hover::before {
+      opacity: 1;
+    }
+
     .table-item.bound {
-      border-color: #52c41a;
-      background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%);
+      border-color: var(--success-color);
+      background: linear-gradient(135deg, #f6ffed 0%, #f0fff4 100%);
+    }
+
+    .table-item.bound::before {
+      opacity: 1;
+      background: var(--success-color);
     }
 
     .table-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: var(--spacing-md);
     }
 
     .table-name {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
-      color: #333;
+      color: var(--text-primary);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--spacing-sm);
     }
 
     .table-id {
-      font-size: 12px;
-      color: #666;
-      font-family: 'Courier New', monospace;
-      background: #f5f5f5;
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-family: 'Consolas', 'Monaco', monospace;
+      background: var(--bg-tertiary);
       padding: 4px 8px;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
     }
 
     .bind-status {
@@ -138,27 +239,28 @@
       padding: 4px 12px;
       border-radius: 12px;
       font-weight: 500;
+      transition: all 0.3s ease;
     }
 
     .bind-status.unbound {
-      background: #fff1f0;
-      color: #ff4d4f;
-      border: 1px solid #ff4d4f;
+      background: var(--error-bg);
+      color: var(--error-color);
+      border: 1px solid var(--error-color);
     }
 
     .bind-status.bound {
-      background: #f0fff4;
-      color: #52c41a;
-      border: 1px solid #52c41a;
+      background: var(--success-bg);
+      color: var(--success-color);
+      border: 1px solid var(--success-color);
     }
 
     .table-info {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 12px;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
       font-size: 13px;
-      color: #666;
+      color: var(--text-secondary);
     }
 
     .info-item {
@@ -169,56 +271,81 @@
 
     .info-label {
       font-weight: 500;
-      color: #999;
+      color: var(--text-tertiary);
     }
 
     .info-value {
-      color: #333;
-      font-family: 'Courier New', monospace;
+      color: var(--text-primary);
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-weight: 500;
     }
 
-    /* 按钮样式 */
+    /* ==================== 按钮样式 ==================== */
     .button {
       padding: 10px 20px;
       border: none;
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .button:hover::before {
+      left: 100%;
     }
 
     .button-primary {
-      background: linear-gradient(135deg, #ff2442 0%, #ff6b6b 100%);
+      background: var(--primary-gradient);
       color: white;
-      box-shadow: 0 2px 8px rgba(255, 36, 66, 0.3);
+      box-shadow: var(--shadow-primary);
     }
 
     .button-primary:hover {
-      box-shadow: 0 4px 15px rgba(255, 36, 66, 0.4);
-      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(255, 36, 66, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .button-primary:active {
+      transform: translateY(0);
     }
 
     .button-secondary {
-      background: #fff;
-      color: #ff2442;
-      border: 2px solid #ff2442;
+      background: var(--bg-primary);
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
     }
 
     .button-secondary:hover {
-      background: #ff2442;
+      background: var(--primary-color);
       color: white;
+      box-shadow: var(--shadow-primary);
     }
 
     .button-small {
-      padding: 6px 12px;
+      padding: 6px 14px;
       font-size: 13px;
+      border-radius: var(--radius-sm);
     }
 
-    /* 模态框样式 */
+    /* ==================== 模态框样式 ==================== */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -226,10 +353,17 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
       z-index: 10000;
       align-items: center;
       justify-content: center;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .modal-overlay.active {
@@ -237,91 +371,120 @@
     }
 
     .modal {
-      background: white;
-      border-radius: 16px;
-      padding: 24px;
-      max-width: 500px;
+      background: var(--bg-primary);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xl);
+      max-width: 520px;
       width: 90%;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .modal-header {
       font-size: 20px;
-      font-weight: 600;
-      color: #ff2442;
-      margin-bottom: 20px;
+      font-weight: 700;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: var(--spacing-lg);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--spacing-sm);
     }
 
     .modal-close {
       position: absolute;
-      top: 16px;
-      right: 16px;
-      background: #f5f5f5;
-      border: 1px solid #d9d9d9;
-      font-size: 24px;
-      color: #666;
+      top: var(--spacing-md);
+      right: var(--spacing-md);
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      font-size: 20px;
+      color: var(--text-secondary);
       cursor: pointer;
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       transition: all 0.2s ease;
       font-weight: bold;
     }
 
     .modal-close:hover {
-      background: #e8e8e8;
-      color: #333;
-      border-color: #b8b8b8;
-      transform: scale(1.05);
+      background: var(--border-color-dark);
+      color: var(--text-primary);
+      transform: rotate(90deg);
     }
 
+    /* ==================== 表单样式 ==================== */
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: var(--spacing-lg);
     }
 
     .form-group label {
       display: block;
       font-size: 14px;
-      font-weight: 500;
-      color: #333;
-      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-sm);
     }
 
     .form-group input,
-    .form-group select {
+    .form-group select,
+    .form-group textarea {
       width: 100%;
-      padding: 12px;
-      border: 2px solid #f0f0f0;
-      border-radius: 8px;
+      padding: 12px 14px;
+      border: 2px solid var(--border-color-light);
+      border-radius: var(--radius-md);
       font-size: 14px;
       transition: all 0.3s ease;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: inherit;
     }
 
     .form-group input:focus,
-    .form-group select:focus {
+    .form-group select:focus,
+    .form-group textarea:focus {
       outline: none;
-      border-color: #ff2442;
+      border-color: var(--primary-color);
       box-shadow: 0 0 0 3px rgba(255, 36, 66, 0.1);
+      background: var(--bg-primary);
+    }
+
+    .form-group input::placeholder,
+    .form-group select::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--text-disabled);
     }
 
     .form-hint {
       font-size: 12px;
-      color: #999;
-      margin-top: 6px;
+      color: var(--text-tertiary);
+      margin-top: var(--spacing-sm);
+      line-height: 1.5;
     }
 
     .modal-actions {
       display: flex;
-      gap: 12px;
-      margin-top: 24px;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-xl);
     }
 
     .modal-actions .button {
@@ -715,28 +878,42 @@
       margin: 0;
     }
 
-    /* Tab 按钮样式 */
+    /* ==================== Tab 标签页样式 ==================== */
     .tab-button {
-      padding: 12px 24px;
+      padding: 14px 28px;
       font-size: 15px;
-      font-weight: 500;
-      color: #666;
+      font-weight: 600;
+      color: var(--text-secondary);
       background: transparent;
       border: none;
-      border-bottom: 2px solid transparent;
+      border-bottom: 3px solid transparent;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
-      top: 2px;
+    }
+
+    .tab-button::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--primary-gradient);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
     }
 
     .tab-button:hover {
-      color: #333;
+      color: var(--primary-color);
     }
 
     .tab-button.tab-active {
-      color: #ff2442;
-      border-bottom-color: #ff2442;
+      color: var(--primary-color);
+    }
+
+    .tab-button.tab-active::after {
+      transform: scaleX(1);
     }
 
     .tab-content {
@@ -753,9 +930,77 @@
         transform: translateY(0);
       }
     }
+
+    /* ==================== 响应式设计 ==================== */
+    @media (max-width: 768px) {
+      /* 容器优化 */
+      .container {
+        padding: 20px 16px;
+      }
+
+      /* 标题字号 */
+      .title {
+        font-size: 24px;
+      }
+
+      /* Tab按钮优化 */
+      .tab-button {
+        padding: 12px 16px;
+        font-size: 14px;
+      }
+
+      /* 推送设置列表 - 在小屏幕时调整网格最小宽度 */
+      .push-setting-item > div:first-child > div:last-child {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      /* 更窄屏幕时优化 */
+      .push-setting-item {
+        padding: 16px;
+        gap: 12px;
+      }
+
+      /* 按钮变为纯图标 */
+      .push-setting-item button {
+        padding: 8px;
+        min-width: 32px;
+      }
+
+      .push-setting-item button svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      /* 调整网格为单列布局 */
+      .push-setting-item > div:first-child > div:last-child {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      /* 超窄屏幕时优化 */
+      .container {
+        padding: 16px 12px;
+      }
+
+      .header {
+        margin-bottom: 24px;
+      }
+
+      .title {
+        font-size: 20px;
+      }
+
+      /* 进一步减小列表项内边距 */
+      .push-setting-item {
+        padding: 12px;
+      }
+    }
   </style>
   
-  <script type="module" crossorigin src="./assets/index.22c0fef2.js"></script>
+  <script type="module" crossorigin src="./assets/index.4a9026d4.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -921,7 +1166,16 @@
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
           <span id="progressText" style="font-size: 13px; color: #666;">准备中...</span>
-          <button id="pauseBtn" class="button button-secondary" style="padding: 4px 12px; font-size: 12px;">暂停</button>
+          <button id="pauseBtn" class="button button-secondary" style="padding: 6px 14px; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+            <svg class="pause-icon" width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+              <rect x="6" y="4" width="4" height="16"></rect>
+              <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+            <svg class="play-icon" width="12" height="12" fill="currentColor" viewBox="0 0 24 24" style="display: none;">
+              <polygon points="5,3 19,12 5,21"></polygon>
+            </svg>
+            <span class="btn-text">暂停</span>
+          </button>
         </div>
         <div style="width: 100%; height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden;">
           <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #1890ff 0%, #096dd9 100%); transition: width 0.3s ease;"></div>
@@ -1051,7 +1305,12 @@
     <!-- 暂停状态提示 -->
     <div id="pauseStatus" style="display: none; margin-top: 20px; padding: 12px; background: #fffbe6; border: 1px solid #ffe58f; border-radius: 6px; text-align: center;">
       <span style="font-size: 14px; color: #fa8c16;">⚠️ 已暂停，点击"继续"按钮可恢复获取</span>
-      <button id="resumeBtn" class="button button-primary" style="margin-left: 12px; padding: 6px 16px; font-size: 13px;">继续</button>
+      <button id="resumeBtn" class="button button-primary" style="margin-left: 12px; padding: 6px 16px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+          <polygon points="5,3 19,12 5,21"></polygon>
+        </svg>
+        继续
+      </button>
     </div>
 
     <div id="status" class="status"></div>
@@ -1395,7 +1654,11 @@
                  placeholder="用于写入笔记到表格的权限令牌"
                  data-i18n-placeholder="pushSettings.modal.personalBaseTokenHint">
           <div style="margin-top: 6px; font-size: 12px; color: #999;">
-            <span data-i18n="pushSettings.modal.personalBaseTokenHelp">如何获取: 打开飞书多维表格 → 点击右上角"..." → 选择"开发者选项" → 复制Personal Base Token</span>
+            <span data-i18n="pushSettings.modal.personalBaseTokenHelpPrefix">如何获取: 打开飞书多维表格 → 点击</span>
+            <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="BasePlugInOutlined" style="vertical-align: -0.125em;">
+              <path d="M13.333 7H19.5v1.89c-.785.151-1.556.451-2.225.954-1.12.841-1.775 2.124-1.775 3.656s.655 2.815 1.775 3.656c.669.503 1.44.803 2.225.954V20h-15V7h4.833V5a2 2 0 0 1 4 0v2Zm2-2a4 4 0 1 0-8 0h-3.5C3.097 5 2.5 5.597 2.5 6.333v14.334c0 .736.597 1.333 1.333 1.333h16.334c.736 0 1.333-.597 1.333-1.333v-3.83c0-.346-.32-.604-.667-.604-1.84 0-3.333-.892-3.333-2.733 0-1.84 1.492-2.733 3.333-2.733.347 0 .667-.258.667-.605V6.333C21.5 5.597 20.903 5 20.167 5h-4.834Z" fill="currentColor"></path>
+            </svg>
+            <span data-i18n="pushSettings.modal.personalBaseTokenHelpSuffix"> → 自定义插件 → 获取授权码</span>
           </div>
         </div>
 
