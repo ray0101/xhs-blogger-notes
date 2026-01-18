@@ -755,7 +755,7 @@
     }
   </style>
   
-  <script type="module" crossorigin src="./assets/index.38c2a4ba.js"></script>
+  <script type="module" crossorigin src="./assets/index.22c0fef2.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -796,9 +796,12 @@
     <!-- Tab 切换 -->
     <div style="margin-bottom: 20px;">
       <div style="display: flex; gap: 8px; border-bottom: 2px solid #e8e8e8;">
-        <button id="tabBlogger" class="tab-button tab-active" data-tab="blogger">根据博主主页获取</button>
-        <button id="tabSingle" class="tab-button" data-tab="single">完整数据获取</button>
-        <button id="tabAutoPush" class="tab-button" data-tab="autoPush">自动推送/更新笔记</button>
+        <button id="tabBlogger" class="tab-button tab-active" data-tab="blogger">博主笔记获取</button>
+        <button id="tabSingle" class="tab-button" data-tab="single">笔记获取</button>
+        <button id="tabAutoPush" class="tab-button" data-tab="autoPush">
+          自动推送
+          <span style="display: inline-block; margin-left: 4px; font-size: 16px;">🔥</span>
+        </button>
       </div>
     </div>
 
@@ -862,10 +865,19 @@
 
       <!-- 自动推送/更新笔记 -->
       <div class="tab-content" id="autoPushTabContent" style="display: none;">
-        <div style="padding: 60px 20px; text-align: center; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px;">
-          <div style="font-size: 24px; font-weight: 600; color: #333; margin-bottom: 16px;">🚧</div>
-          <div style="font-size: 20px; font-weight: 500; color: #666; margin-bottom: 12px;">敬请期待</div>
-          <div style="font-size: 14px; color: #999;">自动推送和更新笔记功能正在开发中</div>
+        <!-- 推送设置标题和添加按钮 -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 style="font-size: 16px; font-weight: 600; color: #333; margin: 0;" data-i18n="pushSettings.title">推送设置</h3>
+          <button id="addPushSettingBtn" class="button button-primary" style="padding: 8px 16px; font-size: 14px;" data-i18n="pushSettings.add">添加</button>
+        </div>
+
+        <!-- 推送设置列表 -->
+        <div id="pushSettingsList">
+          <!-- 列表项将在这里动态生成 -->
+          <div id="pushSettingsEmpty" style="padding: 80px 20px; text-align: center; background: white; border-radius: 12px; border: 2px dashed #e8e8e8;">
+            <div style="font-size: 64px; margin-bottom: 20px; opacity: 0.6;">📋</div>
+            <div style="font-size: 15px; color: #999; font-weight: 500;" data-i18n="pushSettings.empty">暂无推送设置，点击"添加"按钮创建</div>
+          </div>
         </div>
       </div>
 
@@ -942,16 +954,16 @@
 
       <div class="fields-showcase-grid">
         <div class="field-item">
-          <input type="checkbox" class="field-checkbox" value="noteId" checked>
+          <input type="checkbox" class="field-checkbox" value="noteId" checked disabled>
           <span class="field-label">笔记ID</span>
         </div>
         <div class="field-item">
-          <input type="checkbox" class="field-checkbox" value="authorNickname" checked>
+          <input type="checkbox" class="field-checkbox" value="authorNickname" checked disabled>
           <span class="field-label">博主昵称</span>
         </div>
         <div class="field-item">
           <input type="checkbox" class="field-checkbox" value="authorRedId" checked>
-          <span class="field-label">小红书号</span>
+          <span class="field-label">博主小红书号</span>
         </div>
         <div class="field-item" id="bloggerHomepageField">
           <input type="checkbox" class="field-checkbox" value="bloggerHomepage" checked>
@@ -975,7 +987,7 @@
         </div>
         <div class="field-item">
           <input type="checkbox" class="field-checkbox" value="imageAttachments" checked>
-          <span class="field-label">图片列表</span>
+          <span class="field-label">封面图/图片列表</span>
         </div>
         <div class="field-item">
           <input type="checkbox" class="field-checkbox" value="tags" checked>
@@ -1311,6 +1323,169 @@
       </svg>
       <span data-i18n="buttons.support">技术支持</span>
     </a>
+  </div>
+
+  <!-- 推送设置模态框 -->
+  <div id="pushSettingModal" class="modal-overlay">
+    <div class="modal" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+      <button class="modal-close" onclick="closePushSettingModal()">&times;</button>
+      <div class="modal-header">
+        <h2 id="pushSettingModalTitle" data-i18n="pushSettings.modal.title">添加推送设置</h2>
+      </div>
+      <form id="pushSettingForm" style="padding: 24px;">
+        <input type="hidden" id="pushSettingId">
+
+        <!-- 使用说明 -->
+        <div style="margin-bottom: 20px; padding: 12px 16px; background: #fff7e6; border: 1px solid #ffd591; border-radius: 6px; font-size: 13px; line-height: 1.6;">
+          <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
+            <svg width="16" height="16" fill="none" stroke="#fa8c16" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 2px;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span style="font-weight: 600; color: #d46b08;" data-i18n="pushSettings.modal.usageTitle">下载次数说明：</span>
+          </div>
+          <div style="color: #873800; padding-left: 24px;">
+            <div style="margin-bottom: 4px;">• <span data-i18n="pushSettings.modal.usagePoint1">每检测1次消耗1次下载次数（无论是否有笔记）</span></div>
+            <div style="margin-bottom: 4px;">• <span data-i18n="pushSettings.modal.usagePoint2">每获取1篇笔记消耗1次下载次数（例：某时刻检测到3篇新笔记，将消耗4次下载次数）</span></div>
+            <div>• <span data-i18n="pushSettings.modal.usagePoint3">默认获取当前时间以后的笔记</span></div>
+          </div>
+        </div>
+
+        <!-- 表格选择 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="pushSettings.modal.selectTable">
+            选择推送表格 <span style="color: #ff4d4f;">*</span>
+          </label>
+          <div id="addModeTableSelection">
+            <select id="pushSettingTableSelect" required
+                    style="width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; transition: all 0.3s;">
+              <option value="">请选择表格</option>
+            </select>
+            <div id="pushSettingAppTokenDisplay" style="margin-top: 6px; font-size: 12px; color: #666;">
+              <span style="color: #999;">App Token:</span>
+              <span id="pushSettingAppTokenValue">-</span>
+            </div>
+          </div>
+          <div id="editModeTableInfo" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="flex: 1;">
+                <div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 4px;" id="editModeTableName">-</div>
+                <div style="font-size: 12px; color: #999;">
+                  <span style="color: #999;">Table ID:</span>
+                  <span id="editModeTableId" style="font-family: monospace; color: #666;">-</span>
+                </div>
+              </div>
+              <a id="editModeTableLink" href="#" target="_blank"
+                 style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 6px; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.3s; white-space: nowrap;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+                <span data-i18n="pushSettings.modal.openTable">打开表格</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Base Token -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="pushSettings.modal.personalBaseToken">
+            Personal Base Token <span style="color: #ff4d4f;">*</span>
+          </label>
+          <input type="password" id="pushSettingPersonalBaseToken" required
+                 style="width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; transition: all 0.3s;"
+                 placeholder="用于写入笔记到表格的权限令牌"
+                 data-i18n-placeholder="pushSettings.modal.personalBaseTokenHint">
+          <div style="margin-top: 6px; font-size: 12px; color: #999;">
+            <span data-i18n="pushSettings.modal.personalBaseTokenHelp">如何获取: 打开飞书多维表格 → 点击右上角"..." → 选择"开发者选项" → 复制Personal Base Token</span>
+          </div>
+        </div>
+
+        <!-- 博主信息 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="pushSettings.modal.bloggerUrl">
+            博主链接 <span style="color: #ff4d4f;">*</span>
+          </label>
+          <input type="text" id="pushSettingBloggerUrl" required
+                 style="width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; transition: all 0.3s;"
+                 placeholder="支持 xiaohongshu.com 或 xhslink.com 链接，或直接输入24位小红书ID"
+                 data-i18n-placeholder="pushSettings.modal.bloggerUrlHint">
+        </div>
+
+        <!-- 博主昵称（可选） -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="pushSettings.modal.bloggerNickname">
+            博主昵称
+          </label>
+          <input type="text" id="pushSettingBloggerNickname"
+                 style="width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; transition: all 0.3s;"
+                 placeholder="可选，用于标识和管理">
+        </div>
+
+        <!-- 时间配置类型 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="pushSettings.modal.timeConfigType">
+            时间配置类型 <span style="color: #ff4d4f;">*</span>
+          </label>
+          <select id="pushSettingTimeConfigType" required
+                  style="width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; transition: all 0.3s;">
+            <option value="fixed" data-i18n="pushSettings.modal.timeTypeFixed">固定时间点</option>
+            <option value="interval" data-i18n="pushSettings.modal.timeTypeInterval">间隔时间</option>
+          </select>
+        </div>
+
+        <!-- 检测时间配置 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" id="checkTimeLabel" data-i18n="pushSettings.modal.checkTime">
+            检测时间 <span style="color: #ff4d4f;">*</span>
+          </label>
+          <div id="checkTimeFixedContainer">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;" id="checkTimeFixedList"></div>
+            <button type="button" id="addCheckTimeBtn" style="padding: 6px 12px; font-size: 13px; background: white; border: 1px dashed #d9d9d9; border-radius: 4px; cursor: pointer;">
+              + 添加时间点
+            </button>
+          </div>
+          <div id="checkTimeIntervalContainer" style="display: none;">
+            <input type="number" id="checkTimeIntervalInput"
+                   style="width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px;"
+                   placeholder="间隔分钟数，如：30（每30分钟）" min="1">
+            <div style="margin-top: 4px; font-size: 12px; color: #999;">
+              <span data-i18n="pushSettings.modal.intervalUnit">单位：分钟（每隔N分钟检测一次）</span>
+            </div>
+          </div>
+          <input type="text" id="checkTimeCronInput"
+                 style="display: none; width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px;"
+                 placeholder="Cron表达式，如：0 0 9 * * ?（每天上午9点）">
+        </div>
+
+        <!-- 随机延迟设置（隐藏） -->
+        <div style="margin-bottom: 20px; display: none;">
+          <input type="checkbox" id="pushSettingEnableRandomDelay" checked style="width: 16px; height: 16px;">
+          <div id="randomDelayConfig" style="display: flex; gap: 12px;">
+            <div style="flex: 1;">
+              <label style="display: block; font-size: 13px; color: #666; margin-bottom: 4px;" data-i18n="pushSettings.modal.randomDelayMin">最小延迟（秒）</label>
+              <input type="number" id="pushSettingRandomDelayMin" value="10" min="0"
+                     style="width: 100%; padding: 8px 10px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px;">
+            </div>
+            <div style="flex: 1;">
+              <label style="display: block; font-size: 13px; color: #666; margin-bottom: 4px;" data-i18n="pushSettings.modal.randomDelayMax">最大延迟（秒）</label>
+              <input type="number" id="pushSettingRandomDelayMax" value="100" min="0"
+                     style="width: 100%; padding: 8px 10px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px;">
+            </div>
+          </div>
+        </div>
+
+        <!-- 是否启用 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #333;">
+            <input type="checkbox" id="pushSettingIsEnabled" checked style="width: 16px; height: 16px;">
+            <span data-i18n="pushSettings.modal.isEnabled">启用此推送设置</span>
+          </label>
+        </div>
+      </form>
+      <div class="modal-actions">
+        <button type="button" class="button button-secondary" onclick="closePushSettingModal()" data-i18n="buttons.cancel">取消</button>
+        <button type="button" class="button button-primary" onclick="savePushSetting()" data-i18n="buttons.save">保存</button>
+      </div>
+    </div>
   </div>
 
   <!-- Toast 容器 -->
